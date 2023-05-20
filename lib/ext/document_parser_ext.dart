@@ -1,9 +1,8 @@
 import 'dart:convert';
 
 import 'package:super_editor/super_editor.dart';
+import 'package:super_editor_json/parser/document_parser.dart';
 import 'package:super_editor_json/parser/json/document_json_parser.dart';
-
-import '../parser/document_parser.dart';
 
 extension DocumentJson on Document {
 

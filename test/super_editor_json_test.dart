@@ -84,6 +84,7 @@ void main() {
         HorizontalRuleNode(id: DocumentEditor.createNodeId());
     var json = horizontalRuleNode.toJson();
     assert(json != null);
+    print(json);
     var node = DocumentNodeJson.fromJson(json!);
     var json2 = node.toJson();
     assert(json2 != null);
