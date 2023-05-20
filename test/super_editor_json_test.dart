@@ -38,7 +38,7 @@ void main() {
       id: DocumentEditor.createNodeId(),
       text: AttributedText(
           text: '有序列表1',
-          spans: AttributedSpans(attributions: [
+          spans: AttributedSpans(attributions: const [
             SpanMarker(
                 attribution: boldAttribution,
                 offset: 0,
@@ -61,7 +61,7 @@ void main() {
       id: DocumentEditor.createNodeId(),
       text: AttributedText(
           text: '无序列表',
-          spans: AttributedSpans(attributions: [
+          spans: AttributedSpans(attributions: const [
             SpanMarker(
                 attribution: boldAttribution,
                 offset: 0,
@@ -112,7 +112,7 @@ void main() {
       metadata: {'blockType': blockquoteAttribution},
       text: AttributedText(
           text: "加粗文本，斜体文本，删除文本,下划线文本.注释块类型",
-          spans: AttributedSpans(attributions: [
+          spans: AttributedSpans(attributions: const [
             SpanMarker(
                 attribution: boldAttribution,
                 offset: 0,
