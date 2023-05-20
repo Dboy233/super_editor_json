@@ -1,41 +1,35 @@
-import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:super_editor/super_editor.dart';
 import 'package:super_editor_json/ext/document_parser_ext.dart';
-import 'package:super_editor_json/parser/json/document_json_parser.dart';
 
 import '_example_document.dart';
 
-
 void main() {
-
-  test("文档 测试", (){
+  test("文档 测试", () {
     var document = createInitialDocument();
     var json = document.toJson();
-    assert(json!=null);
+    assert(json != null);
     var document2 = DocumentJson.fromJson(json!);
     var json2 = document2.toJson();
-    assert(json2!=null);
+    assert(json2 != null);
     expect(json, json2);
   });
 
-
-  test("Task 测试", (){
+  test("Task 测试", () {
     var taskNode = TaskNode(
       id: DocumentEditor.createNodeId(),
       isComplete: true,
       text: AttributedText(
         text:
-        'Create and configure your document, for example, by creating a new MutableDocument.',
+            'Create and configure your document, for example, by creating a new MutableDocument.',
       ),
     );
     var json = taskNode.toJson();
-    assert(json!=null);
+    assert(json != null);
     var node = DocumentNodeJson.fromJson(json!);
     var json2 = node.toJson();
-    assert(json2!=null);
+    assert(json2 != null);
     expect(json, json2);
   });
 
@@ -43,8 +37,7 @@ void main() {
     var listItemNode = ListItemNode.ordered(
       id: DocumentEditor.createNodeId(),
       text: AttributedText(
-          text:
-          '有序列表1',
+          text: '有序列表1',
           spans: AttributedSpans(attributions: [
             SpanMarker(
                 attribution: boldAttribution,
@@ -67,8 +60,7 @@ void main() {
     var listItemNode = ListItemNode.unordered(
       id: DocumentEditor.createNodeId(),
       text: AttributedText(
-          text:
-              '无序列表',
+          text: '无序列表',
           spans: AttributedSpans(attributions: [
             SpanMarker(
                 attribution: boldAttribution,
