@@ -8,9 +8,9 @@ import '_example_document.dart';
 void main() {
   test("文档 测试", () {
     var document = createInitialDocument();
-    var json = document.toJson();
+    var json = document.toJson(customSerializeParser: []);
     assert(json != null);
-    var document2 = DocumentJson.fromJson(json!);
+    var document2 = DocumentJson.fromJson(json!,customSerializeParser: []);
     var json2 = document2.toJson();
     assert(json2 != null);
     expect(json, json2);
@@ -27,6 +27,7 @@ void main() {
     );
     var json = taskNode.toJson();
     assert(json != null);
+    print(json);
     var node = DocumentNodeJson.fromJson(json!);
     var json2 = node.toJson();
     assert(json2 != null);
@@ -74,6 +75,7 @@ void main() {
     );
     var json = listItemNode.toJson();
     assert(json != null);
+    print(json);
     var node = DocumentNodeJson.fromJson(json!);
     var json2 = node.toJson();
     expect(json, json2);
@@ -84,7 +86,6 @@ void main() {
         HorizontalRuleNode(id: DocumentEditor.createNodeId());
     var json = horizontalRuleNode.toJson();
     assert(json != null);
-    print(json);
     var node = DocumentNodeJson.fromJson(json!);
     var json2 = node.toJson();
     assert(json2 != null);
@@ -95,7 +96,7 @@ void main() {
     var imageNode = ImageNode(
       id: "1",
       imageUrl: 'https://i.ibb.co/5nvRdx1/flutter-horizon.png',
-      altText: "图片",
+      altText: "Image",
       metadata: const SingleColumnLayoutComponentStyles(
         width: double.infinity,
         padding: EdgeInsets.zero,

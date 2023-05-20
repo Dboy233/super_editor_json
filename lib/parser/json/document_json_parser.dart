@@ -11,7 +11,7 @@ final defaultSerializeParser = [
   ListItemNodeSerializeParser(),
 ];
 
-///序列化文档
+///文档序列化 , Document serialization
 List<dynamic> documentSerialize(
   Document document, {
   List<AbsDocumentSerialize> customSerializeParser = const [],
@@ -28,7 +28,7 @@ List<dynamic> documentSerialize(
   return allNodes;
 }
 
-///序列化节点
+///节点序列化 Node serialization
 Map<String, dynamic>? documentNodeSerialize(DocumentNode node,
     {List<AbsDocumentSerialize> customSerializeParser = const []}) {
   final parsers = [...customSerializeParser, ...defaultSerializeParser];
@@ -42,7 +42,7 @@ Map<String, dynamic>? documentNodeSerialize(DocumentNode node,
   throw "the node ${node.runtimeType} cannot be serialized,Please check if there is a corresponding parser";
 }
 
-///文档反序列化
+///文档反序列化，Document deserialization
 Document documentDeserialize(List<dynamic> map,
     {List<AbsDocumentSerialize> customSerializeParser = const []}) {
   List<DocumentNode> nodes = [];
@@ -58,7 +58,7 @@ Document documentDeserialize(List<dynamic> map,
   return MutableDocument(nodes: nodes);
 }
 
-///节点数据反序列化
+///节点反序列化，Node deserialization
 DocumentNode documentNodeDeserialize(Map<String, dynamic> map,
     {List<AbsDocumentSerialize> customSerializeParser = const []}) {
   final parsers = [...customSerializeParser, ...defaultSerializeParser];
@@ -71,12 +71,12 @@ DocumentNode documentNodeDeserialize(Map<String, dynamic> map,
   throw "If it cannot be resolved, check whether there is a resolver for the corresponding node type。$map ";
 }
 
-///封装序列化基类
-///- 子类不用进行'节点'类型判断。
-///- 封装通用的序列化和反序列化属性方法
+///Encapsulates the serialization base class
+///- 子类不用进行'节点'类型判断。Subclasses do not need to make 'node' type judgments.
+///- 封装通用的序列化和反序列化属性方法,Encapsulates generic serialization and deserialization property methods
 abstract class BaseDocumentJsonSerialize<T extends DocumentNode>
     extends AbsDocumentSerialize {
-  //region   json数据中node属性保存用到的Key
+  //region   保存node属性用到的Key，Save the key used for the node property
   final String keyNodeType = "nodeType";
   final String keyNodeInfo = "nodeInfo";
   final String keyNodeId = "nodeId";
@@ -95,10 +95,16 @@ abstract class BaseDocumentJsonSerialize<T extends DocumentNode>
 
   //endregion
 
-  ///快速创建id
+  ///快速创建id,Quickly create IDs
   get nodeId => DocumentEditor.createNodeId();
 
-  ///反序列化
+  ///Deserialization
+  ///
+  ///- [map] For data formats, see [serialize] note description.
+  ///       有关数据格式，请参阅 [serialize] 注释说明。
+  /// @return Document node of type [T] currently.
+  ///         当前类型为 [T] 的文档节点。
+  ///
   @override
   DocumentNode? deserialize(Map<String, dynamic> map) {
     var type = map[keyNodeType];
@@ -108,7 +114,18 @@ abstract class BaseDocumentJsonSerialize<T extends DocumentNode>
     return null;
   }
 
-  ///序列化
+  ///Serialization
+  ///
+  /// return:
+  ///
+  /// {
+  ///   "[keyNodeType]":"ImageNode",
+  ///   "[keyNodeInfo]":{
+  ///           The current node serializes the information.
+  ///   }
+  /// }
+  ///
+  ///
   @override
   Map<String, dynamic>? serialize(DocumentNode node) {
     if (node.runtimeType == T) {
@@ -117,18 +134,39 @@ abstract class BaseDocumentJsonSerialize<T extends DocumentNode>
     return null;
   }
 
-  ///反序列化节点
+  ///Deserialize the node
   T? deserializeNode(Map<String, dynamic> map);
 
-  ///序列化节点数据
+  ///Serialize node data
   Map<String, dynamic>? serializeNode(T node);
 
+  ///Serialize the [AttributedText]
+  ///
+  ///@return
+  ///{
+  ///   "[keyText]":"Attributed text - I am text",
+  ///   "[keySpans]":[
+  ///     {
+  ///      "id":"link",
+  ///      "link":"www.google.com",
+  ///      "type":"start",
+  ///      "offset":0
+  ///     },
+  ///   {
+  ///       "id":"link",
+  ///       "link":"www.google.com",
+  ///       "type":"end",
+  ///       "offset":7
+  ///    }
+  ///   ]
+  ///}
   Map<String, dynamic> serializeAttrText(AttributedText attributedText) {
     final text = attributedText.text;
     final spans = serializeSpans(attributedText.spans);
     return {keyText: text, keySpans: spans};
   }
 
+  ///Deserialization [AttributedText]
   AttributedText deserializeAttrText(Map<String, dynamic>? map) {
     if (map == null) {
       return AttributedText(text: '');
@@ -222,7 +260,8 @@ abstract class BaseDocumentJsonSerialize<T extends DocumentNode>
     return AttributedSpans(attributions: markers);
   }
 
-  ///序列化 Metadata，封装了通用的数据转换，特殊类型还需要通过[covert]转换
+  ///Serializing metadata, which encapsulates generic data transformations.
+  ///Custom metadata needs to be converted via the [covert] callback method.
   Map<String, dynamic> serializeMetadata(Map<String, dynamic> metadata,
       {dynamic Function(String key, dynamic value)? covert}) {
     return metadata.map((key, value) {
@@ -240,7 +279,7 @@ abstract class BaseDocumentJsonSerialize<T extends DocumentNode>
     });
   }
 
-  ///所有NameAttribution
+  ///All known NameAttribution
   static const _allNameAttribution = [
     header1Attribution,
     header2Attribution,
@@ -266,7 +305,8 @@ abstract class BaseDocumentJsonSerialize<T extends DocumentNode>
     NamedAttribution("task"),
   ];
 
-  ///反序列化Metadata，封装了通用的类型。特殊类型还需通过[covert]自行转换。
+  ///Deserialized Metadata, which encapsulates common types.
+  ///Custom metadata needs to be converted by [covert].
   Map<String, dynamic> deserializeMetadata(Map<String, dynamic>? metadata,
       {dynamic Function(String key, dynamic value)? covert,
       List<NamedAttribution>? customNameAttribution}) {
@@ -292,6 +332,11 @@ abstract class BaseDocumentJsonSerialize<T extends DocumentNode>
         {};
   }
 
+  ///
+  /// {
+  ///   "width":213,
+  ///   "padding":[-1,0,0,0,0] //-1 is EdgeInsets type ， -2 is EdgeInsetsDirectional type.
+  /// }
   Map<String, dynamic> serializeSingleColumnLayoutMetadata(
       Map<String, dynamic> map) {
     var width = map["width"]?.toString();
