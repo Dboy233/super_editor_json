@@ -27,7 +27,6 @@ void main() {
     );
     var json = taskNode.toJson();
     assert(json != null);
-    print(json);
     var node = DocumentNodeJson.fromJson(json!);
     var json2 = node.toJson();
     assert(json2 != null);
@@ -75,7 +74,6 @@ void main() {
     );
     var json = listItemNode.toJson();
     assert(json != null);
-    print(json);
     var node = DocumentNodeJson.fromJson(json!);
     var json2 = node.toJson();
     expect(json, json2);

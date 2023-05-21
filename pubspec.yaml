@@ -1,7 +1,11 @@
 name: super_editor_json
-description: 将SuperEditor Document转换为json格式,支持自定义组件。Converts SuperEditor Document to JSON format with support for custom components.
-version: 0.0.3
+description: Converts SuperEditor Document to JSON format with support for custom components.
+version: 0.0.4
 homepage: https://github.com/Dboy233/super_editor_json
+
+screenshots:
+  - description: "The document is parsed into a screenshot of the JSON format"
+    path: screenshot.png
 
 environment:
   sdk: '>=3.0.1 <4.0.0'

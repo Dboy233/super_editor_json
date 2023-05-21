@@ -370,16 +370,16 @@ abstract class BaseDocumentJsonSerialize<T extends DocumentNode>
     if (paddingInfo != null) {
       if (paddingInfo[0] == -1) {
         padding = EdgeInsets.only(
-            left: paddingInfo[1],
-            top: paddingInfo[2],
-            right: paddingInfo[3],
-            bottom: paddingInfo[4]);
+            left: double.tryParse(paddingInfo[1].toString()) ?? 0,
+            top: double.tryParse(paddingInfo[2].toString()) ?? 0,
+            right: double.tryParse(paddingInfo[3].toString()) ?? 0,
+            bottom: double.tryParse(paddingInfo[4].toString()) ?? 0);
       } else {
         padding = EdgeInsetsDirectional.only(
-            start: paddingInfo[1],
-            top: paddingInfo[2],
-            end: paddingInfo[3],
-            bottom: paddingInfo[4]);
+            start: double.tryParse(paddingInfo[1].toString()) ?? 0,
+            top: double.tryParse(paddingInfo[2].toString()) ?? 0,
+            end: double.tryParse(paddingInfo[3].toString()) ?? 0,
+            bottom: double.tryParse(paddingInfo[4].toString()) ?? 0);
       }
     }
     return {"width": double.tryParse(map["width"]), "padding": padding};

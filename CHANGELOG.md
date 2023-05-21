@@ -1,11 +1,15 @@
-## 0.0.1
+## 0.0.4
 
-* 第一版发布，可以将Document解析为Json格式
-
-## 0.0.2
-
-* 将方法公开，子类可以访问
+* Fixed type conversion bugs
 
 ## 0.0.3
 
-* 修复NamedAttribution反序列化失败bug
+* Fixed the NamedAttribution deserialization failure bug
+
+## 0.0.2
+
+* Expose the method so that subclasses can access it
+
+## 0.0.1
+
+* The first version was released, and Document could be parsed into JSON format
