@@ -29,7 +29,7 @@ List<dynamic> documentSerialize(
 }
 
 ///节点序列化 Node serialization
-Map<String, dynamic>? documentNodeSerialize(DocumentNode node,
+Map<String, dynamic> documentNodeSerialize(DocumentNode node,
     {List<AbsDocumentSerialize> customSerializeParser = const []}) {
   final parsers = [...customSerializeParser, ...defaultSerializeParser];
 
