@@ -109,7 +109,7 @@ abstract class BaseDocumentJsonSerialize<T extends DocumentNode>
   DocumentNode? deserialize(Map<String, dynamic> map) {
     var type = map[keyNodeType];
     if (T.toString() == type) {
-      return deserializeNode(map[keyNodeInfo]);
+      return deserializeNode(map[keyNodeInfo] ?? {});
     }
     return null;
   }
@@ -160,7 +160,8 @@ abstract class BaseDocumentJsonSerialize<T extends DocumentNode>
   ///    }
   ///   ]
   ///}
-  Map<String, dynamic> serializeAttrText(AttributedText attributedText) {
+  Map<String, dynamic> serializeAttrText(AttributedText? attributedText) {
+    if (attributedText == null) return {};
     final text = attributedText.text;
     final spans = serializeSpans(attributedText.spans);
     return {keyText: text, keySpans: spans};
@@ -201,7 +202,9 @@ abstract class BaseDocumentJsonSerialize<T extends DocumentNode>
   ///       "offset":7
   ///  }
   ///}
-  List<dynamic> serializeSpans(AttributedSpans spans) {
+  List<dynamic> serializeSpans(AttributedSpans? spans) {
+    if (spans == null) return [];
+
     List<dynamic> spansList = [];
 
     for (var marker in spans.markers) {
@@ -235,7 +238,8 @@ abstract class BaseDocumentJsonSerialize<T extends DocumentNode>
   }
 
   ///反序列化AttributedSpans的数据
-  AttributedSpans deserializeSpans(List<dynamic> spans) {
+  AttributedSpans deserializeSpans(List<dynamic>? spans) {
+    if (spans == null) return AttributedSpans();
     List<SpanMarker> markers = [];
     for (var marker in spans) {
       var attrId = marker[keyAttributionId];
@@ -262,8 +266,9 @@ abstract class BaseDocumentJsonSerialize<T extends DocumentNode>
 
   ///Serializing metadata, which encapsulates generic data transformations.
   ///Custom metadata needs to be converted via the [covert] callback method.
-  Map<String, dynamic> serializeMetadata(Map<String, dynamic> metadata,
+  Map<String, dynamic> serializeMetadata(Map<String, dynamic>? metadata,
       {dynamic Function(String key, dynamic value)? covert}) {
+    if (metadata == null) return {};
     return metadata.map((key, value) {
       var covertValue = covert?.call(key, value);
       if (covertValue != null) {
@@ -338,7 +343,8 @@ abstract class BaseDocumentJsonSerialize<T extends DocumentNode>
   ///   "padding":[-1,0,0,0,0] //-1 is EdgeInsets type ， -2 is EdgeInsetsDirectional type.
   /// }
   Map<String, dynamic> serializeSingleColumnLayoutMetadata(
-      Map<String, dynamic> map) {
+      Map<String, dynamic>? map) {
+    if (map == null) return {};
     var width = map["width"]?.toString();
     var padding = (map["padding"] ?? EdgeInsets.zero);
     List<dynamic>? paddingInfo;
@@ -364,7 +370,8 @@ abstract class BaseDocumentJsonSerialize<T extends DocumentNode>
   }
 
   Map<String, dynamic> deserializeSingleColumnLayoutMetadata(
-      Map<String, dynamic> map) {
+      Map<String, dynamic>? map) {
+    if (map == null) return {};
     List<dynamic>? paddingInfo = map["padding"];
     EdgeInsetsGeometry padding = EdgeInsets.zero;
     if (paddingInfo != null) {
