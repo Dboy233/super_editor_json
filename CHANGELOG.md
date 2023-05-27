@@ -1,3 +1,7 @@
+## 0.0.5
+
+* Modify Dart Version to add NULL judgment handling
+
 ## 0.0.4
 
 * Fixed type conversion bugs

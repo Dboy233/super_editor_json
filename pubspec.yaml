@@ -1,6 +1,6 @@
 name: super_editor_json
 description: Converts SuperEditor Document to JSON format with support for custom components.
-version: 0.0.4
+version: 0.0.5
 homepage: https://github.com/Dboy233/super_editor_json
 
 screenshots:
