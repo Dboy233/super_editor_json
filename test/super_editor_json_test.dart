@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:super_editor/super_editor.dart';
 import 'package:super_editor_json/ext/document_parser_ext.dart';
@@ -6,11 +6,55 @@ import 'package:super_editor_json/ext/document_parser_ext.dart';
 import '_example_document.dart';
 
 void main() {
+  test("自定义颜色属性测试", () {
+    var paragraphNode = ParagraphNode(
+      id: DocumentEditor.createNodeId(),
+      metadata: {'blockType': blockquoteAttribution},
+      text: AttributedText(
+          text: "测试文本",
+          spans: AttributedSpans(attributions: [
+            SpanMarker(
+                attribution: _ColorAttribution(Colors.red),
+                offset: 0,
+                markerType: SpanMarkerType.start),
+            SpanMarker(
+                attribution: _ColorAttribution(Colors.red),
+                offset: 3,
+                markerType: SpanMarkerType.end),
+          ])),
+    );
+    serialize(attribution) {
+      if (attribution is _ColorAttribution) {
+        return {
+          "color": attribution.color.value,
+        };
+      }
+    }
+
+    deserializeAttr(Map<String, dynamic> map) {
+      if (map["color"] != null) {
+        return _ColorAttribution(Color(map["color"]));
+      }
+    }
+
+    var json = paragraphNode.toJson(
+      attributionSerializeBuilder: serialize,
+    );
+    var docNode = DocumentNodeJson.fromJson(
+      json!,
+      attributionDeserializeBuilder: deserializeAttr,
+    );
+    var json2 = docNode.toJson(
+      attributionSerializeBuilder: serialize,
+    );
+    expect(json, json2);
+  });
+
   test("文档 测试", () {
     var document = createInitialDocument();
     var json = document.toJson(customSerializeParser: []);
     assert(json != null);
-    var document2 = DocumentJson.fromJson(json!,customSerializeParser: []);
+    var document2 = DocumentJson.fromJson(json!, customSerializeParser: []);
     var json2 = document2.toJson();
     assert(json2 != null);
     expect(json, json2);
@@ -61,13 +105,21 @@ void main() {
       id: DocumentEditor.createNodeId(),
       text: AttributedText(
           text: '无序列表',
-          spans: AttributedSpans(attributions: const [
-            SpanMarker(
+          spans: AttributedSpans(attributions: [
+            const SpanMarker(
                 attribution: boldAttribution,
                 offset: 0,
                 markerType: SpanMarkerType.start),
-            SpanMarker(
+            const SpanMarker(
                 attribution: boldAttribution,
+                offset: 3,
+                markerType: SpanMarkerType.end),
+            SpanMarker(
+                attribution: LinkAttribution(url: Uri.parse("www.baidu.com")),
+                offset: 0,
+                markerType: SpanMarkerType.start),
+            SpanMarker(
+                attribution: LinkAttribution(url: Uri.parse("www.baidu.com")),
                 offset: 3,
                 markerType: SpanMarkerType.end),
           ])),
@@ -103,6 +155,37 @@ void main() {
     var json = imageNode.toJson();
     var node = DocumentNodeJson.fromJson(json!);
     var json2 = node.toJson();
+    expect(json, json2);
+  });
+
+  test("超链接属性测试", () {
+    var paragraphNode = ParagraphNode(
+      id: DocumentEditor.createNodeId(),
+      metadata: {'blockType': blockquoteAttribution},
+      text: AttributedText(
+          text: "加粗超链接文本",
+          spans: AttributedSpans(attributions: [
+            const SpanMarker(
+                attribution: boldAttribution,
+                offset: 0,
+                markerType: SpanMarkerType.start),
+            const SpanMarker(
+                attribution: boldAttribution,
+                offset: 6,
+                markerType: SpanMarkerType.end),
+            SpanMarker(
+                attribution: LinkAttribution(url: Uri.parse("www.baidu.com")),
+                offset: 0,
+                markerType: SpanMarkerType.start),
+            SpanMarker(
+                attribution: LinkAttribution(url: Uri.parse("www.baidu.com")),
+                offset: 6,
+                markerType: SpanMarkerType.end),
+          ])),
+    );
+    var json = paragraphNode.toJson();
+    var docNode = DocumentNodeJson.fromJson(json!);
+    var json2 = docNode.toJson();
     expect(json, json2);
   });
 
@@ -156,4 +239,33 @@ void main() {
 
   // expect(json, json2);
   // DocumentNode.fromJson(json);
+}
+
+class _ColorAttribution extends Attribution {
+  final Color color;
+
+  _ColorAttribution(this.color);
+
+  @override
+  bool canMergeWith(Attribution other) {
+    return this == other;
+  }
+
+  @override
+  String toString() {
+    return '[ColorAttribution]: ${color.value}';
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is _ColorAttribution &&
+          runtimeType == other.runtimeType &&
+          color == other.color;
+
+  @override
+  int get hashCode => color.hashCode;
+
+  @override
+  String get id => 'color';
 }

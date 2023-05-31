@@ -1,11 +1,13 @@
 name: super_editor_json
 description: Converts SuperEditor Document to JSON format with support for custom components.
-version: 0.0.5
+version: 0.0.6
 homepage: https://github.com/Dboy233/super_editor_json
 
 screenshots:
   - description: "The document is parsed into a screenshot of the JSON format"
     path: screenshot.png
+  - description: "The document is parsed into a screenshot of the JSON format"
+    path: screenshot2.png
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
@@ -14,7 +16,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  super_editor: ^0.2.5
+  super_editor: ^0.2.6
 
 dev_dependencies:
   flutter_test:

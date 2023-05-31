@@ -12,9 +12,12 @@ final defaultSerializeParser = [
 ];
 
 ///文档序列化 , Document serialization
+///[customSerializeParser] 自定义序列化处理器
+///[attributionSerializeBuilder] 属性序列化构建器 - [Attribution]
 List<dynamic> documentSerialize(
   Document document, {
   List<AbsDocumentSerialize> customSerializeParser = const [],
+  AttributionSerializeBuilder? attributionSerializeBuilder,
 }) {
   var nodes = document.nodes;
   List<dynamic> allNodes = [];
@@ -23,17 +26,26 @@ List<dynamic> documentSerialize(
     allNodes.add(documentNodeSerialize(
       node,
       customSerializeParser: customSerializeParser,
+      attributionSerializeBuilder: attributionSerializeBuilder,
     ));
   }
   return allNodes;
 }
 
 ///节点序列化 Node serialization
-Map<String, dynamic> documentNodeSerialize(DocumentNode node,
-    {List<AbsDocumentSerialize> customSerializeParser = const []}) {
+///[customSerializeParser] 自定义序列化处理器
+///[attributionSerializeBuilder] 属性序列化构建器 - [Attribution]
+Map<String, dynamic> documentNodeSerialize(
+  DocumentNode node, {
+  List<AbsDocumentSerialize> customSerializeParser = const [],
+  AttributionSerializeBuilder? attributionSerializeBuilder,
+}) {
   final parsers = [...customSerializeParser, ...defaultSerializeParser];
 
   for (var parser in parsers) {
+    if (parser is BaseDocumentJsonSerialize) {
+      parser.customAttributionSerializeBuilder = attributionSerializeBuilder;
+    }
     var data = parser.serialize(node);
     if (data != null) {
       return data;
@@ -43,8 +55,13 @@ Map<String, dynamic> documentNodeSerialize(DocumentNode node,
 }
 
 ///文档反序列化，Document deserialization
-Document documentDeserialize(List<dynamic> map,
-    {List<AbsDocumentSerialize> customSerializeParser = const []}) {
+///[customSerializeParser] 自定义序列化处理器
+///[attributionDeserializeBuilder] 属性反序列化构建器 - [Attribution]
+Document documentDeserialize(
+  List<dynamic> map, {
+  List<AbsDocumentSerialize> customSerializeParser = const [],
+  AttributionDeserializeBuilder? attributionDeserializeBuilder,
+}) {
   List<DocumentNode> nodes = [];
   List<dynamic> jsonNodes = map;
 
@@ -52,6 +69,7 @@ Document documentDeserialize(List<dynamic> map,
     nodes.add(documentNodeDeserialize(
       jsonNode,
       customSerializeParser: customSerializeParser,
+      attributionDeserializeBuilder: attributionDeserializeBuilder,
     ));
   }
 
@@ -59,10 +77,19 @@ Document documentDeserialize(List<dynamic> map,
 }
 
 ///节点反序列化，Node deserialization
-DocumentNode documentNodeDeserialize(Map<String, dynamic> map,
-    {List<AbsDocumentSerialize> customSerializeParser = const []}) {
+///[customSerializeParser] 自定义序列化处理器
+///[attributionDeserializeBuilder] 属性反序列化构建器 - [Attribution]
+DocumentNode documentNodeDeserialize(
+  Map<String, dynamic> map, {
+  List<AbsDocumentSerialize> customSerializeParser = const [],
+  AttributionDeserializeBuilder? attributionDeserializeBuilder,
+}) {
   final parsers = [...customSerializeParser, ...defaultSerializeParser];
   for (var parser in parsers) {
+    if (parser is BaseDocumentJsonSerialize) {
+      parser.customAttributionDeserializeBuilder =
+          attributionDeserializeBuilder;
+    }
     var data = parser.deserialize(map);
     if (data != null) {
       return data;
@@ -71,11 +98,21 @@ DocumentNode documentNodeDeserialize(Map<String, dynamic> map,
   throw "If it cannot be resolved, check whether there is a resolver for the corresponding node type。$map ";
 }
 
+///[AttributedText] 进行反序列化
+typedef AttributionDeserializeBuilder = Attribution? Function(
+    Map<String, dynamic> map);
+
+///[AttributedText] 进行序列化的时候处理它自定义的属性
+typedef AttributionSerializeBuilder = Map<String, dynamic>? Function(
+    Attribution attribution);
+
 ///Encapsulates the serialization base class
-///- 子类不用进行'节点'类型判断。Subclasses do not need to make 'node' type judgments.
-///- 封装通用的序列化和反序列化属性方法,Encapsulates generic serialization and deserialization property methods
+///- 子类不用进行'节点'类型判断。
+///- 封装通用的序列化和反序列化属性方法.
+///- Subclasses do not need to make 'node' type judgments.
+///- Encapsulates generic serialization and deserialization property methods
 abstract class BaseDocumentJsonSerialize<T extends DocumentNode>
-    extends AbsDocumentSerialize {
+    implements AbsDocumentSerialize {
   //region   保存node属性用到的Key，Save the key used for the node property
   final String keyNodeType = "nodeType";
   final String keyNodeInfo = "nodeInfo";
@@ -86,7 +123,9 @@ abstract class BaseDocumentJsonSerialize<T extends DocumentNode>
   final String keySpanOffset = "Offset";
   final String keyMetadata = "metadata";
   final String keyAttributedText = "attributedText";
+  final String keyAttribution = "attribution";
   final String keyAttributionId = "id";
+  final String keyAttributionName = "name";
   final String keyAttributionLink = "link";
   final String keyImageAltText = "altText";
   final String keyImageUrl = "url";
@@ -97,6 +136,19 @@ abstract class BaseDocumentJsonSerialize<T extends DocumentNode>
 
   ///快速创建id,Quickly create IDs
   get nodeId => DocumentEditor.createNodeId();
+
+  ///设置全局自定义属性序列化构建器，[AttributedText] use
+  AttributionSerializeBuilder? _customAttributionSerializeBuilder;
+  AttributionDeserializeBuilder? _customAttributionDeserializeBuilder;
+
+  set customAttributionSerializeBuilder(AttributionSerializeBuilder? value) {
+    _customAttributionSerializeBuilder = value;
+  }
+
+  set customAttributionDeserializeBuilder(
+      AttributionDeserializeBuilder? value) {
+    _customAttributionDeserializeBuilder = value;
+  }
 
   ///Deserialization
   ///
@@ -109,7 +161,7 @@ abstract class BaseDocumentJsonSerialize<T extends DocumentNode>
   DocumentNode? deserialize(Map<String, dynamic> map) {
     var type = map[keyNodeType];
     if (T.toString() == type) {
-      return deserializeNode(map[keyNodeInfo] ?? {});
+      return deserializeNode(map[keyNodeInfo]);
     }
     return null;
   }
@@ -145,36 +197,30 @@ abstract class BaseDocumentJsonSerialize<T extends DocumentNode>
   ///@return
   ///{
   ///   "[keyText]":"Attributed text - I am text",
-  ///   "[keySpans]":[
-  ///     {
-  ///      "id":"link",
-  ///      "link":"www.google.com",
-  ///      "type":"start",
-  ///      "offset":0
-  ///     },
-  ///   {
-  ///       "id":"link",
-  ///       "link":"www.google.com",
-  ///       "type":"end",
-  ///       "offset":7
-  ///    }
-  ///   ]
+  ///   "[keySpans]":[]
   ///}
-  Map<String, dynamic> serializeAttrText(AttributedText? attributedText) {
-    if (attributedText == null) return {};
+  Map<String, dynamic> serializeAttrText(AttributedText attributedText,
+      {AttributionSerializeBuilder? serializeBuilder}) {
     final text = attributedText.text;
-    final spans = serializeSpans(attributedText.spans);
+    final spans = serializeSpans(
+      attributedText.spans,
+      serializeBuilder: serializeBuilder,
+    );
     return {keyText: text, keySpans: spans};
   }
 
   ///Deserialization [AttributedText]
-  AttributedText deserializeAttrText(Map<String, dynamic>? map) {
+  AttributedText deserializeAttrText(Map<String, dynamic>? map,
+      {AttributionDeserializeBuilder? deserializeBuilder}) {
     if (map == null) {
       return AttributedText(text: '');
     }
     return AttributedText(
       text: map[keyText] ?? '',
-      spans: deserializeSpans(map[keySpans] ?? []),
+      spans: deserializeSpans(
+        map[keySpans] ?? [],
+        deserializeBuilder: deserializeBuilder,
+      ),
     );
   }
 
@@ -190,47 +236,49 @@ abstract class BaseDocumentJsonSerialize<T extends DocumentNode>
   ///{
   /// "spans" : [
   ///  {
-  ///       "id":"link",
-  ///       "link":"www.google.com",
   ///       "type":"start",
   ///       "offset":0
+  ///       "[keyAttribution]": {
+  ///         "[keyAttributionId]":"link",
+  ///         "[keyAttributionLink]":"www.google.com"
+  ///       }
   ///  },
   ///  {
-  ///       "id":"link",
-  ///       "link":"www.google.com",
   ///       "type":"end",
   ///       "offset":7
+  ///       "[keyAttribution]": {
+  ///         "[keyAttributionId]":"link",
+  ///         "[keyAttributionLink]":"www.google.com"
+  ///       }
   ///  }
   ///}
-  List<dynamic> serializeSpans(AttributedSpans? spans) {
-    if (spans == null) return [];
-
+  List<dynamic> serializeSpans(AttributedSpans spans,
+      {AttributionSerializeBuilder? serializeBuilder}) {
     List<dynamic> spansList = [];
 
-    for (var marker in spans.markers) {
-      final attribution = marker.attribution;
-      final attrMap = <String, dynamic>{};
+    List<AttributionSerializeBuilder?> builders = [
+      serializeBuilder,
+      _customAttributionSerializeBuilder,
+      defaultAttributionSerializeBuilder
+    ];
 
-      ///通过id区分
-      final id = attribution.id;
+    for (var marker in spans.markers) {
+      final attrMap = <String, dynamic>{};
+      final attribution = marker.attribution;
+
+      var attributionMap = _handleAttributionSerialize(builders, attribution);
+      if (attributionMap == null) {
+        throw '无法序列化 $attribution';
+      }
       //Span类型
       final type = marker.markerType;
       //Span偏移量
       final offset = marker.offset;
 
-      attrMap[keyAttributionId] = id;
+      attrMap[keyAttribution] = attributionMap;
       attrMap[keySpanType] = type.name;
       attrMap[keySpanOffset] = offset;
 
-      ///特殊Attr属性添加
-      switch (attribution.runtimeType) {
-        case LinkAttribution:
-          final link = (attribution as LinkAttribution).url;
-          attrMap[keyAttributionLink] = link.toString();
-          break;
-        default:
-          break;
-      }
       spansList.add(attrMap);
     }
 
@@ -238,17 +286,19 @@ abstract class BaseDocumentJsonSerialize<T extends DocumentNode>
   }
 
   ///反序列化AttributedSpans的数据
-  AttributedSpans deserializeSpans(List<dynamic>? spans) {
-    if (spans == null) return AttributedSpans();
+  AttributedSpans deserializeSpans(List<dynamic> spans,
+      {AttributionDeserializeBuilder? deserializeBuilder}) {
+    List<AttributionDeserializeBuilder?> builders = [
+      deserializeBuilder,
+      _customAttributionDeserializeBuilder,
+      defaultAttributionDeserializeBuilder
+    ];
     List<SpanMarker> markers = [];
     for (var marker in spans) {
-      var attrId = marker[keyAttributionId];
-      Attribution attribution;
-      if (attrId == "link") {
-        attribution =
-            LinkAttribution(url: Uri.parse(marker[keyAttributionLink]));
-      } else {
-        attribution = NamedAttribution(attrId);
+      Attribution? attribution =
+          _handleAttributionDeserialize(builders, marker);
+      if (attribution == null) {
+        throw '无法进行序列化 $marker';
       }
       SpanMarkerType type;
       if (marker[keySpanType] == SpanMarkerType.start.name) {
@@ -264,24 +314,83 @@ abstract class BaseDocumentJsonSerialize<T extends DocumentNode>
     return AttributedSpans(attributions: markers);
   }
 
+  ///处理[Attribution]序列化的数据
+  Map<String, dynamic>? _handleAttributionSerialize(
+      List<AttributionSerializeBuilder?> builders, Attribution attribution) {
+    for (var builder in builders) {
+      final value = builder?.call(attribution);
+      if (value != null) {
+        return value;
+      }
+    }
+    return null;
+  }
+
+  ///处理[Attribution]的反序列化
+  Attribution? _handleAttributionDeserialize(
+      List<AttributionDeserializeBuilder?> builders, marker) {
+    Attribution? attribution;
+    for (var builder in builders) {
+      ///FIXME: keyAttribution 在下个版本将不能为NULL,因为旧版本中不存在这个属性。
+      attribution = builder?.call(marker[keyAttribution] ?? marker);
+      if (attribution != null) break;
+    }
+    return attribution;
+  }
+
+  ///默认属性序列化构建器
+  Map<String, dynamic>? defaultAttributionSerializeBuilder(
+      Attribution attribution) {
+    ///特殊Attr属性添加
+    if (attribution is LinkAttribution) {
+      return {
+        keyAttributionId: attribution.id,
+        keyAttributionLink: attribution.url.toString(),
+      };
+    } else if (attribution is NamedAttribution) {
+      return {
+        keyAttributionId: attribution.id,
+        keyAttributionName: attribution.name,
+      };
+    }
+    return null;
+  }
+
+  ///默认属性反序列化构建器
+  Attribution? defaultAttributionDeserializeBuilder(Map<String, dynamic> map) {
+    var attrName = map[keyAttributionId];
+    if (attrName == "link") {
+      return LinkAttribution(url: Uri.parse(map[keyAttributionLink]));
+    } else {
+      ///为什么这么做呢，为了防止自定义的Attribution
+      for (var value in _allNameAttribution) {
+        if (attrName == value.id) {
+          return value;
+        }
+      }
+    }
+    return null;
+  }
+
   ///Serializing metadata, which encapsulates generic data transformations.
   ///Custom metadata needs to be converted via the [covert] callback method.
   Map<String, dynamic> serializeMetadata(Map<String, dynamic>? metadata,
       {dynamic Function(String key, dynamic value)? covert}) {
-    if (metadata == null) return {};
-    return metadata.map((key, value) {
-      var covertValue = covert?.call(key, value);
-      if (covertValue != null) {
-        return MapEntry(key, covertValue);
-      }
-      if (value is NamedAttribution) {
-        return MapEntry(key, value.id);
-      }
-      if (key == "singleColumnLayout") {
-        return MapEntry(key, serializeSingleColumnLayoutMetadata(value));
-      }
-      return MapEntry(key, value?.toString());
-    });
+    return metadata?.map((key, value) {
+          var covertValue = covert?.call(key, value);
+          if (covertValue != null) {
+            return MapEntry(key, covertValue);
+          }
+          if (value is Attribution) {}
+          if (value is NamedAttribution) {
+            return MapEntry(key, value.id);
+          }
+          if (key == "singleColumnLayout") {
+            return MapEntry(key, serializeSingleColumnLayoutMetadata(value));
+          }
+          return MapEntry(key, value?.toString());
+        }) ??
+        {};
   }
 
   ///All known NameAttribution
@@ -343,8 +452,7 @@ abstract class BaseDocumentJsonSerialize<T extends DocumentNode>
   ///   "padding":[-1,0,0,0,0] //-1 is EdgeInsets type ， -2 is EdgeInsetsDirectional type.
   /// }
   Map<String, dynamic> serializeSingleColumnLayoutMetadata(
-      Map<String, dynamic>? map) {
-    if (map == null) return {};
+      Map<String, dynamic> map) {
     var width = map["width"]?.toString();
     var padding = (map["padding"] ?? EdgeInsets.zero);
     List<dynamic>? paddingInfo;
@@ -370,8 +478,7 @@ abstract class BaseDocumentJsonSerialize<T extends DocumentNode>
   }
 
   Map<String, dynamic> deserializeSingleColumnLayoutMetadata(
-      Map<String, dynamic>? map) {
-    if (map == null) return {};
+      Map<String, dynamic> map) {
     List<dynamic>? paddingInfo = map["padding"];
     EdgeInsetsGeometry padding = EdgeInsets.zero;
     if (paddingInfo != null) {

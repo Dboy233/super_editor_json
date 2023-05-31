@@ -417,17 +417,17 @@ packages:
     dependency: "direct main"
     description:
       name: super_editor
-      sha256: "3bd5eb99d16fae52b6471db677770c0159070149f4889fc1a0248b3a41b32642"
+      sha256: "2d5acf95449f53eec1c7d0788530b3a667758224a1e4aa4164bd5d6c0d159bab"
       url: "https://pub.dev"
     source: hosted
-    version: "0.2.5"
+    version: "0.2.6"
   super_editor_json:
     dependency: "direct main"
     description:
       path: ".."
       relative: true
     source: path
-    version: "0.0.4"
+    version: "0.0.6"
   super_text_layout:
     dependency: transitive
     description:

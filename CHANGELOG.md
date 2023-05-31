@@ -1,3 +1,8 @@
+## 0.0.6
+
+* Destructive update,but compatible.
+* this update adds custom attribution, but causes json structure changes, so update with caution.
+
 ## 0.0.5
 
 * Modify Dart Version to add NULL judgment handling

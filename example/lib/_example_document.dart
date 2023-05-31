@@ -1,7 +1,6 @@
 import 'package:flutter/rendering.dart';
 import 'package:super_editor/super_editor.dart';
 
-
 get jsonDocument => r"""
 [
     {
@@ -31,7 +30,20 @@ get jsonDocument => r"""
             "nodeId": "f9b38627-55a6-4c9a-8dfe-4df8d3aeb75b",
             "attributedText": {
                 "text": "Welcome to Super Editor 💙 🚀",
-                "spans": []
+                "spans": [
+                    {
+                      "id": "color",
+                      "type": "start",
+                      "Offset": 0,
+                      "color": 4294198070
+                    },
+                    {
+                      "id": "color",
+                      "type": "end",
+                      "Offset": 6,
+                      "color": 4294198070
+                    }
+                ]
             },
             "metadata": {
                 "blockType": "header1"

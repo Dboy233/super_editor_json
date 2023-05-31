@@ -35,9 +35,28 @@ class _EditorPageState extends State<EditorPage> {
   @override
   void initState() {
     //Create a document using json.
-    document = DocumentJson.fromJson(jsonDocument);
+    document = DocumentJson.fromJson(jsonDocument,
+        attributionDeserializeBuilder: deserializeAttr);
     editor = DocumentEditor(document: document as MutableDocument);
     super.initState();
+  }
+
+  ///serialize Attribution
+  Map<String, dynamic>? serializeAttr(attribution) {
+    if (attribution is _ColorAttribution) {
+      return {
+        "color": attribution.color.value,
+      };
+    }
+    return null;
+  }
+
+  ///deserialize Attribution
+  Attribution? deserializeAttr(Map<String, dynamic> map) {
+    if (map["color"] != null) {
+      return _ColorAttribution(Color(map["color"]));
+    }
+    return null;
   }
 
   _showJsonDialog(String json) {
@@ -73,18 +92,67 @@ class _EditorPageState extends State<EditorPage> {
           TaskComponentBuilder(editor),
           ...defaultComponentBuilders,
         ],
+        stylesheet: defaultStylesheet.copyWith(
+          inlineTextStyler: (attributions, existingStyle) {
+            TextStyle newStyle =
+                defaultInlineTextStyler(attributions, existingStyle);
+
+            for (final attribution in attributions) {
+              if (attribution is _ColorAttribution) {
+                newStyle = newStyle.copyWith(
+                  color: attribution.color,
+                );
+              }
+            }
+
+            return newStyle;
+          },
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           // var json = document.toJson(); //save json
 
           //Use formatted JSON data
-          var json = documentSerialize(document);
-          var encoder  = const JsonEncoder.withIndent('  ');
+          var json = documentSerialize(
+            document,
+            attributionSerializeBuilder: serializeAttr,
+          );
+          var encoder = const JsonEncoder.withIndent('  ');
           _showJsonDialog(encoder.convert(json));
         },
         child: const Icon(Icons.text_snippet_outlined),
       ),
     );
   }
+}
+
+///自定义属性样式
+class _ColorAttribution extends Attribution {
+  final Color color;
+
+  _ColorAttribution(this.color);
+
+  @override
+  bool canMergeWith(Attribution other) {
+    return this == other;
+  }
+
+  @override
+  String toString() {
+    return '[ColorAttribution]: ${color.value}';
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is _ColorAttribution &&
+          runtimeType == other.runtimeType &&
+          color == other.color;
+
+  @override
+  int get hashCode => color.hashCode;
+
+  @override
+  String get id => 'color';
 }
