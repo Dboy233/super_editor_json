@@ -385,7 +385,7 @@ abstract class BaseDocumentJsonSerialize<T extends DocumentNode>
           if (value is NamedAttribution) {
             return MapEntry(key, value.id);
           }
-          if (key == "singleColumnLayout") {
+          if (key == "singleColumnLayout" && value != null) {
             return MapEntry(key, serializeSingleColumnLayoutMetadata(value));
           }
           return MapEntry(key, value?.toString());
@@ -429,7 +429,7 @@ abstract class BaseDocumentJsonSerialize<T extends DocumentNode>
           if (covertValue != null) {
             return MapEntry(key, covertValue);
           }
-          if (key == "singleColumnLayout") {
+          if (key == "singleColumnLayout" && value != null) {
             return MapEntry(key, deserializeSingleColumnLayoutMetadata(value));
           }
           final nameAttrs = [

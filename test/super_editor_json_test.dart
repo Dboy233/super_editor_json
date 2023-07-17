@@ -6,6 +6,39 @@ import 'package:super_editor_json/ext/document_parser_ext.dart';
 import '_example_document.dart';
 
 void main() {
+
+  test("图文", () {
+    var mutableDocument = MutableDocument(
+      nodes: [
+        ParagraphNode(
+          id: DocumentEditor.createNodeId(),
+          metadata: {'blockType': blockquoteAttribution},
+          text: AttributedText(
+              text: "测试文本",
+            ),
+        ),
+        ParagraphNode(
+          id: DocumentEditor.createNodeId(),
+          metadata: {'blockType': blockquoteAttribution},
+          text: AttributedText(
+            text: "测试文本",
+          ),
+        ),
+        ImageNode(
+          id: "1",
+          imageUrl: 'https://i.ibb.co/5nvRdx1/flutter-horizon.png',
+          altText: "Image",
+          metadata: const SingleColumnLayoutComponentStyles(
+            width: double.infinity,
+            padding: EdgeInsets.zero,
+          ).toMetadata(),
+        )
+      ]
+    );
+    var json = mutableDocument.toJson();
+    assert(json!=null);
+  });
+
   test("自定义颜色属性测试", () {
     var paragraphNode = ParagraphNode(
       id: DocumentEditor.createNodeId(),

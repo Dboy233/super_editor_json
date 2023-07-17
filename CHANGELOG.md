@@ -1,3 +1,11 @@
+## 0.0.8
+
+* NULL data processing.
+
+## 0.0.7
+
+* NULL data processing.
+
 ## 0.0.6
 
 * Destructive update,but compatible.
