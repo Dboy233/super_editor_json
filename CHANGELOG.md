@@ -1,3 +1,7 @@
+## 0.0.9
+
+* super_editor version  any
+
 ## 0.0.8
 
 * NULL data processing.
