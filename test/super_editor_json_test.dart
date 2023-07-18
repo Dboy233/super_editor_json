@@ -11,14 +11,14 @@ void main() {
     var mutableDocument = MutableDocument(
       nodes: [
         ParagraphNode(
-          id: DocumentEditor.createNodeId(),
+          id: Editor.createNodeId(),
           metadata: {'blockType': blockquoteAttribution},
           text: AttributedText(
               text: "测试文本",
             ),
         ),
         ParagraphNode(
-          id: DocumentEditor.createNodeId(),
+          id: Editor.createNodeId(),
           metadata: {'blockType': blockquoteAttribution},
           text: AttributedText(
             text: "测试文本",
@@ -41,7 +41,7 @@ void main() {
 
   test("自定义颜色属性测试", () {
     var paragraphNode = ParagraphNode(
-      id: DocumentEditor.createNodeId(),
+      id: Editor.createNodeId(),
       metadata: {'blockType': blockquoteAttribution},
       text: AttributedText(
           text: "测试文本",
@@ -95,7 +95,7 @@ void main() {
 
   test("Task 测试", () {
     var taskNode = TaskNode(
-      id: DocumentEditor.createNodeId(),
+      id: Editor.createNodeId(),
       isComplete: true,
       text: AttributedText(
         text:
@@ -112,7 +112,7 @@ void main() {
 
   test("有序列表 序列化测试", () {
     var listItemNode = ListItemNode.ordered(
-      id: DocumentEditor.createNodeId(),
+      id: Editor.createNodeId(),
       text: AttributedText(
           text: '有序列表1',
           spans: AttributedSpans(attributions: const [
@@ -135,7 +135,7 @@ void main() {
 
   test("无序列表 序列化测试", () {
     var listItemNode = ListItemNode.unordered(
-      id: DocumentEditor.createNodeId(),
+      id: Editor.createNodeId(),
       text: AttributedText(
           text: '无序列表',
           spans: AttributedSpans(attributions: [
@@ -166,7 +166,7 @@ void main() {
 
   test("HorizontalRuleNodeSerializeParser", () {
     var horizontalRuleNode =
-        HorizontalRuleNode(id: DocumentEditor.createNodeId());
+        HorizontalRuleNode(id: Editor.createNodeId());
     var json = horizontalRuleNode.toJson();
     assert(json != null);
     var node = DocumentNodeJson.fromJson(json!);
@@ -193,7 +193,7 @@ void main() {
 
   test("超链接属性测试", () {
     var paragraphNode = ParagraphNode(
-      id: DocumentEditor.createNodeId(),
+      id: Editor.createNodeId(),
       metadata: {'blockType': blockquoteAttribution},
       text: AttributedText(
           text: "加粗超链接文本",
@@ -224,7 +224,7 @@ void main() {
 
   test("ParagraphNode convert test", () {
     var paragraphNode = ParagraphNode(
-      id: DocumentEditor.createNodeId(),
+      id: Editor.createNodeId(),
       metadata: {'blockType': blockquoteAttribution},
       text: AttributedText(
           text: "加粗文本，斜体文本，删除文本,下划线文本.注释块类型",

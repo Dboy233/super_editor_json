@@ -14,7 +14,7 @@ Document createInitialDocument() {
         ).toMetadata(),
       ),
       ParagraphNode(
-        id: DocumentEditor.createNodeId(),
+        id: Editor.createNodeId(),
         text: AttributedText(
           text: 'Welcome to Super Editor 💙 🚀',
         ),
@@ -23,15 +23,15 @@ Document createInitialDocument() {
         },
       ),
       ParagraphNode(
-        id: DocumentEditor.createNodeId(),
+        id: Editor.createNodeId(),
         text: AttributedText(
           text:
               "Super Editor is a toolkit to help you build document editors, document layouts, text fields, and more.",
         ),
       ),
-      HorizontalRuleNode(id: DocumentEditor.createNodeId()),
+      HorizontalRuleNode(id: Editor.createNodeId()),
       ParagraphNode(
-        id: DocumentEditor.createNodeId(),
+        id: Editor.createNodeId(),
         text: AttributedText(
           text: 'Ready-made solutions 📦',
         ),
@@ -40,20 +40,20 @@ Document createInitialDocument() {
         },
       ),
       ListItemNode.unordered(
-        id: DocumentEditor.createNodeId(),
+        id: Editor.createNodeId(),
         text: AttributedText(
           text:
               'SuperEditor is a ready-made, configurable document editing experience.',
         ),
       ),
       ListItemNode.unordered(
-        id: DocumentEditor.createNodeId(),
+        id: Editor.createNodeId(),
         text: AttributedText(
           text: 'SuperTextField is a ready-made, configurable text field.',
         ),
       ),
       ParagraphNode(
-        id: DocumentEditor.createNodeId(),
+        id: Editor.createNodeId(),
         text: AttributedText(
           text: 'Quickstart 🚀',
         ),
@@ -62,13 +62,13 @@ Document createInitialDocument() {
         },
       ),
       ParagraphNode(
-        id: DocumentEditor.createNodeId(),
+        id: Editor.createNodeId(),
         text: AttributedText(
             text:
                 'To get started with your own editing experience, take the following steps:'),
       ),
       TaskNode(
-        id: DocumentEditor.createNodeId(),
+        id: Editor.createNodeId(),
         isComplete: false,
         text: AttributedText(
           text:
@@ -76,7 +76,7 @@ Document createInitialDocument() {
         ),
       ),
       TaskNode(
-        id: DocumentEditor.createNodeId(),
+        id: Editor.createNodeId(),
         isComplete: false,
         text: AttributedText(
           text:
@@ -84,7 +84,7 @@ Document createInitialDocument() {
         ),
       ),
       TaskNode(
-        id: DocumentEditor.createNodeId(),
+        id: Editor.createNodeId(),
         isComplete: false,
         text: AttributedText(
           text:
@@ -92,14 +92,14 @@ Document createInitialDocument() {
         ),
       ),
       ParagraphNode(
-        id: DocumentEditor.createNodeId(),
+        id: Editor.createNodeId(),
         text: AttributedText(
           text:
               "Now, you're off to the races! SuperEditor renders your document, and lets you select, insert, and delete content.",
         ),
       ),
       ParagraphNode(
-        id: DocumentEditor.createNodeId(),
+        id: Editor.createNodeId(),
         text: AttributedText(
           text: 'Explore the toolkit 🔎',
         ),
@@ -108,28 +108,28 @@ Document createInitialDocument() {
         },
       ),
       ListItemNode.unordered(
-        id: DocumentEditor.createNodeId(),
+        id: Editor.createNodeId(),
         text: AttributedText(
           text:
               "Use MutableDocument as an in-memory representation of a document.",
         ),
       ),
       ListItemNode.unordered(
-        id: DocumentEditor.createNodeId(),
+        id: Editor.createNodeId(),
         text: AttributedText(
           text:
               "Implement your own document data store by implementing the Document api.",
         ),
       ),
       ParagraphNode(
-        id: DocumentEditor.createNodeId(),
+        id: Editor.createNodeId(),
         text: AttributedText(
           text:
               "We hope you enjoy using Super Editor. Let us know what you're building, and please file issues for any bugs that you find.",
         ),
       ),
       ParagraphNode(
-        id: DocumentEditor.createNodeId(),
+        id: Editor.createNodeId(),
         text: AttributedText(
             text: "加粗文本，斜体文本，删除文本,下划线文本..普通文本",
             spans: AttributedSpans(attributions: const [
@@ -168,7 +168,7 @@ Document createInitialDocument() {
             ])),
       ),
       ParagraphNode(
-        id: DocumentEditor.createNodeId(),
+        id: Editor.createNodeId(),
         metadata: {'blockType': blockquoteAttribution},
         text: AttributedText(
             text: "加粗文本，斜体文本，删除文本,下划线文本.注释块类型",
@@ -208,7 +208,7 @@ Document createInitialDocument() {
             ])),
       ),
       ParagraphNode(
-        id: DocumentEditor.createNodeId(),
+        id: Editor.createNodeId(),
         text: AttributedText(
             text: "Link Url",
             spans: AttributedSpans(attributions: [

@@ -135,7 +135,7 @@ abstract class BaseDocumentJsonSerialize<T extends DocumentNode>
   //endregion
 
   ///快速创建id,Quickly create IDs
-  get nodeId => DocumentEditor.createNodeId();
+  get nodeId => Editor.createNodeId();
 
   ///设置全局自定义属性序列化构建器，[AttributedText] use
   AttributionSerializeBuilder? _customAttributionSerializeBuilder;
