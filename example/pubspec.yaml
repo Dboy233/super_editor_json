@@ -15,7 +15,10 @@ dependencies:
 
 
   cupertino_icons: ^1.0.2
-  super_editor: ^0.2.6
+  super_editor:
+    git:
+      url: https://github.com/superlistapp/super_editor.git
+      path: super_editor
   super_editor_json:
     path: ../../super_editor_json
 

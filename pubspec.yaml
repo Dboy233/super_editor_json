@@ -18,9 +18,8 @@ dependencies:
     sdk: flutter
   super_editor:
     git:
-      url: https://github.com/Dboy233/super_editor.git
+      url: https://github.com/superlistapp/super_editor.git
       path: super_editor
-      ref: 'fixIosChineseInput'
 
 dev_dependencies:
   flutter_test:
