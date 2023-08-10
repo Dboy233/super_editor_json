@@ -35,13 +35,13 @@ class _EditorPageState extends State<EditorPage> {
   @override
   void initState() {
     //Create a document using json.
-    document = DocumentJson.fromJson(jsonDocument,
-        attributionDeserializeBuilder: deserializeAttr);
+    document = DocumentJson.fromJson(jsonDocument, attributionDeserializeBuilder: deserializeAttr);
     editor = DocumentEditor(document: document as MutableDocument);
     super.initState();
   }
 
-  ///serialize Attribution
+  ///自定义 ColorAttribution 序列化
+  ///Custom ColorAttribution serialization
   Map<String, dynamic>? serializeAttr(attribution) {
     if (attribution is _ColorAttribution) {
       return {
@@ -51,7 +51,8 @@ class _EditorPageState extends State<EditorPage> {
     return null;
   }
 
-  ///deserialize Attribution
+  ///反序列化自定义的 ColorAttribution
+  ///Deserialize the custom ColorAttribution
   Attribution? deserializeAttr(Map<String, dynamic> map) {
     if (map["color"] != null) {
       return _ColorAttribution(Color(map["color"]));
@@ -92,10 +93,12 @@ class _EditorPageState extends State<EditorPage> {
           TaskComponentBuilder(editor),
           ...defaultComponentBuilders,
         ],
+
+        ///要使用自定义的 Attribution ,首先我们要将自定义 ColorAttribution 应用到我们的 Node 上。
+        ///查看[_ColorAttribution]的注释
         stylesheet: defaultStylesheet.copyWith(
           inlineTextStyler: (attributions, existingStyle) {
-            TextStyle newStyle =
-                defaultInlineTextStyler(attributions, existingStyle);
+            TextStyle newStyle = defaultInlineTextStyler(attributions, existingStyle);
 
             for (final attribution in attributions) {
               if (attribution is _ColorAttribution) {
@@ -112,11 +115,10 @@ class _EditorPageState extends State<EditorPage> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           // var json = document.toJson(); //save json
-
           //Use formatted JSON data
           var json = documentSerialize(
             document,
-            attributionSerializeBuilder: serializeAttr,
+            customAttributionSerializeBuilder: serializeAttr,
           );
           var encoder = const JsonEncoder.withIndent('  ');
           _showJsonDialog(encoder.convert(json));
@@ -128,6 +130,24 @@ class _EditorPageState extends State<EditorPage> {
 }
 
 ///自定义属性样式
+///如何使用:
+///
+///  var paragraphNode = ParagraphNode(
+//       id: DocumentEditor.createNodeId(),
+//       text: AttributedText(
+//         text: 'Welcome to Super Editor 💙 🚀',
+//         spans: AttributedSpans(
+//           attributions: [
+//             SpanMarker(
+//               attribution: _ColorAttribution(Colors.red),
+//               offset: 0,
+//               markerType: SpanMarkerType.start,
+//             )
+//           ],
+//         ),
+//       ),
+//     );
+///
 class _ColorAttribution extends Attribution {
   final Color color;
 
@@ -145,10 +165,7 @@ class _ColorAttribution extends Attribution {
 
   @override
   bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is _ColorAttribution &&
-          runtimeType == other.runtimeType &&
-          color == other.color;
+      identical(this, other) || other is _ColorAttribution && runtimeType == other.runtimeType && color == other.color;
 
   @override
   int get hashCode => color.hashCode;

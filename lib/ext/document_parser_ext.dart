@@ -12,8 +12,8 @@ extension DocumentJson on Document {
   }) {
     var dynamicJson = documentSerialize(
       this,
-      customSerializeParser: customSerializeParser,
-      attributionSerializeBuilder: attributionSerializeBuilder,
+      customNodeSerializeParser: customSerializeParser,
+      customAttributionSerializeBuilder: attributionSerializeBuilder,
     );
     return jsonEncode(dynamicJson);
   }
@@ -25,8 +25,8 @@ extension DocumentJson on Document {
   }) {
     return documentDeserialize(
       jsonDecode(json),
-      customSerializeParser: customSerializeParser,
-      attributionDeserializeBuilder: attributionDeserializeBuilder,
+      customNodeSerializeParser: customSerializeParser,
+      customAttributionDeserializeBuilder: attributionDeserializeBuilder,
     );
   }
 }
@@ -38,8 +38,8 @@ extension DocumentNodeJson on DocumentNode {
   }) {
     var dynamicJson = documentNodeSerialize(
       this,
-      customSerializeParser: customSerializeParser,
-      attributionSerializeBuilder: attributionSerializeBuilder,
+      customNodeSerializeParser: customSerializeParser,
+      customAttributionSerializeBuilder: attributionSerializeBuilder,
     );
     return jsonEncode(dynamicJson);
   }
@@ -51,8 +51,8 @@ extension DocumentNodeJson on DocumentNode {
   }) {
     return documentNodeDeserialize(
       jsonDecode(json),
-      customSerializeParser: customSerializeParser,
-      attributionDeserializeBuilder: attributionDeserializeBuilder,
+      customNodeSerializeParser: customSerializeParser,
+      customAttributionDeserializeBuilder: attributionDeserializeBuilder,
     );
   }
 }

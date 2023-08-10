@@ -56,6 +56,8 @@ void main() {
                 markerType: SpanMarkerType.end),
           ])),
     );
+
+    ///自定义颜色序列化
     serialize(attribution) {
       if (attribution is _ColorAttribution) {
         return {
@@ -64,6 +66,7 @@ void main() {
       }
     }
 
+    ///自定义颜色反序列化
     deserializeAttr(Map<String, dynamic> map) {
       if (map["color"] != null) {
         return _ColorAttribution(Color(map["color"]));

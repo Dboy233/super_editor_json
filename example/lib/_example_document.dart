@@ -405,8 +405,7 @@ Document createInitialDocument() {
       ListItemNode.unordered(
         id: DocumentEditor.createNodeId(),
         text: AttributedText(
-          text:
-              'SuperEditor is a ready-made, configurable document editing experience.',
+          text: 'SuperEditor is a ready-made, configurable document editing experience.',
         ),
       ),
       ListItemNode.unordered(
@@ -426,24 +425,20 @@ Document createInitialDocument() {
       ),
       ParagraphNode(
         id: DocumentEditor.createNodeId(),
-        text: AttributedText(
-            text:
-                'To get started with your own editing experience, take the following steps:'),
+        text: AttributedText(text: 'To get started with your own editing experience, take the following steps:'),
       ),
       TaskNode(
         id: DocumentEditor.createNodeId(),
         isComplete: false,
         text: AttributedText(
-          text:
-              'Create and configure your document, for example, by creating a new MutableDocument.',
+          text: 'Create and configure your document, for example, by creating a new MutableDocument.',
         ),
       ),
       TaskNode(
         id: DocumentEditor.createNodeId(),
         isComplete: false,
         text: AttributedText(
-          text:
-              "If you want programmatic control over the user's selection and styles, create a DocumentComposer.",
+          text: "If you want programmatic control over the user's selection and styles, create a DocumentComposer.",
         ),
       ),
       TaskNode(
@@ -473,15 +468,13 @@ Document createInitialDocument() {
       ListItemNode.unordered(
         id: DocumentEditor.createNodeId(),
         text: AttributedText(
-          text:
-              "Use MutableDocument as an in-memory representation of a document.",
+          text: "Use MutableDocument as an in-memory representation of a document.",
         ),
       ),
       ListItemNode.unordered(
         id: DocumentEditor.createNodeId(),
         text: AttributedText(
-          text:
-              "Implement your own document data store by implementing the Document api.",
+          text: "Implement your own document data store by implementing the Document api.",
         ),
       ),
       ParagraphNode(
@@ -496,38 +489,14 @@ Document createInitialDocument() {
         text: AttributedText(
             text: "加粗文本，斜体文本，删除文本,下划线文本..普通文本",
             spans: AttributedSpans(attributions: const [
-              SpanMarker(
-                  attribution: boldAttribution,
-                  offset: 0,
-                  markerType: SpanMarkerType.start),
-              SpanMarker(
-                  attribution: boldAttribution,
-                  offset: 3,
-                  markerType: SpanMarkerType.end),
-              SpanMarker(
-                  attribution: italicsAttribution,
-                  offset: 5,
-                  markerType: SpanMarkerType.start),
-              SpanMarker(
-                  attribution: italicsAttribution,
-                  offset: 8,
-                  markerType: SpanMarkerType.end),
-              SpanMarker(
-                  attribution: strikethroughAttribution,
-                  offset: 10,
-                  markerType: SpanMarkerType.start),
-              SpanMarker(
-                  attribution: strikethroughAttribution,
-                  offset: 13,
-                  markerType: SpanMarkerType.end),
-              SpanMarker(
-                  attribution: underlineAttribution,
-                  offset: 14,
-                  markerType: SpanMarkerType.start),
-              SpanMarker(
-                  attribution: underlineAttribution,
-                  offset: 19,
-                  markerType: SpanMarkerType.end),
+              SpanMarker(attribution: boldAttribution, offset: 0, markerType: SpanMarkerType.start),
+              SpanMarker(attribution: boldAttribution, offset: 3, markerType: SpanMarkerType.end),
+              SpanMarker(attribution: italicsAttribution, offset: 5, markerType: SpanMarkerType.start),
+              SpanMarker(attribution: italicsAttribution, offset: 8, markerType: SpanMarkerType.end),
+              SpanMarker(attribution: strikethroughAttribution, offset: 10, markerType: SpanMarkerType.start),
+              SpanMarker(attribution: strikethroughAttribution, offset: 13, markerType: SpanMarkerType.end),
+              SpanMarker(attribution: underlineAttribution, offset: 14, markerType: SpanMarkerType.start),
+              SpanMarker(attribution: underlineAttribution, offset: 19, markerType: SpanMarkerType.end),
             ])),
       ),
       ParagraphNode(
@@ -536,38 +505,14 @@ Document createInitialDocument() {
         text: AttributedText(
             text: "加粗文本，斜体文本，删除文本,下划线文本.注释块类型",
             spans: AttributedSpans(attributions: const [
-              SpanMarker(
-                  attribution: boldAttribution,
-                  offset: 0,
-                  markerType: SpanMarkerType.start),
-              SpanMarker(
-                  attribution: boldAttribution,
-                  offset: 3,
-                  markerType: SpanMarkerType.end),
-              SpanMarker(
-                  attribution: italicsAttribution,
-                  offset: 5,
-                  markerType: SpanMarkerType.start),
-              SpanMarker(
-                  attribution: italicsAttribution,
-                  offset: 8,
-                  markerType: SpanMarkerType.end),
-              SpanMarker(
-                  attribution: strikethroughAttribution,
-                  offset: 10,
-                  markerType: SpanMarkerType.start),
-              SpanMarker(
-                  attribution: strikethroughAttribution,
-                  offset: 13,
-                  markerType: SpanMarkerType.end),
-              SpanMarker(
-                  attribution: underlineAttribution,
-                  offset: 14,
-                  markerType: SpanMarkerType.start),
-              SpanMarker(
-                  attribution: underlineAttribution,
-                  offset: 19,
-                  markerType: SpanMarkerType.end),
+              SpanMarker(attribution: boldAttribution, offset: 0, markerType: SpanMarkerType.start),
+              SpanMarker(attribution: boldAttribution, offset: 3, markerType: SpanMarkerType.end),
+              SpanMarker(attribution: italicsAttribution, offset: 5, markerType: SpanMarkerType.start),
+              SpanMarker(attribution: italicsAttribution, offset: 8, markerType: SpanMarkerType.end),
+              SpanMarker(attribution: strikethroughAttribution, offset: 10, markerType: SpanMarkerType.start),
+              SpanMarker(attribution: strikethroughAttribution, offset: 13, markerType: SpanMarkerType.end),
+              SpanMarker(attribution: underlineAttribution, offset: 14, markerType: SpanMarkerType.start),
+              SpanMarker(attribution: underlineAttribution, offset: 19, markerType: SpanMarkerType.end),
             ])),
       ),
       ParagraphNode(
@@ -576,13 +521,11 @@ Document createInitialDocument() {
             text: "Link Url",
             spans: AttributedSpans(attributions: [
               SpanMarker(
-                  attribution:
-                      LinkAttribution(url: Uri.parse("www.google.com")),
+                  attribution: LinkAttribution(url: Uri.parse("www.google.com")),
                   offset: 0,
                   markerType: SpanMarkerType.start),
               SpanMarker(
-                  attribution:
-                      LinkAttribution(url: Uri.parse("www.google.com")),
+                  attribution: LinkAttribution(url: Uri.parse("www.google.com")),
                   offset: 7,
                   markerType: SpanMarkerType.end),
             ])),
