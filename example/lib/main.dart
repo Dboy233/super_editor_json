@@ -121,7 +121,9 @@ class _EditorPageState extends State<EditorPage> {
             customAttributionSerializeBuilder: serializeAttr,
           );
           var encoder = const JsonEncoder.withIndent('  ');
-          _showJsonDialog(encoder.convert(json));
+          var convert = encoder.convert(json);
+          print(convert);
+          _showJsonDialog(convert);
         },
         child: const Icon(Icons.text_snippet_outlined),
       ),
