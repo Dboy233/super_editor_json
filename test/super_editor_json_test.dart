@@ -6,37 +6,38 @@ import 'package:super_editor_json/ext/document_parser_ext.dart';
 import '_example_document.dart';
 
 void main() {
-
   test("图文", () {
     var mutableDocument = MutableDocument(
-      nodes: [
-        ParagraphNode(
-          id: DocumentEditor.createNodeId(),
-          metadata: {'blockType': blockquoteAttribution},
-          text: AttributedText(
+        nodes: [
+          ParagraphNode(
+            id: DocumentEditor.createNodeId(),
+            metadata: {'blockType': blockquoteAttribution},
+            text: AttributedText(
               text: "测试文本",
             ),
-        ),
-        ParagraphNode(
-          id: DocumentEditor.createNodeId(),
-          metadata: {'blockType': blockquoteAttribution},
-          text: AttributedText(
-            text: "测试文本",
           ),
-        ),
-        ImageNode(
-          id: "1",
-          imageUrl: 'https://i.ibb.co/5nvRdx1/flutter-horizon.png',
-          altText: "Image",
-          metadata: const SingleColumnLayoutComponentStyles(
-            width: double.infinity,
-            padding: EdgeInsets.zero,
-          ).toMetadata(),
-        )
-      ]
+          ParagraphNode(
+            id: DocumentEditor.createNodeId(),
+            metadata: {'blockType': blockquoteAttribution},
+            text: AttributedText(
+              text: "测试文本",
+            ),
+          ),
+          ImageNode(
+            id: "1",
+            imageUrl: 'https://i.ibb.co/5nvRdx1/flutter-horizon.png',
+            altText: "Image",
+            metadata: const SingleColumnLayoutComponentStyles(
+              width: double.infinity,
+              padding: EdgeInsets.zero,
+            ).toMetadata(),
+          )
+        ]
     );
     var json = mutableDocument.toJson();
-    assert(json!=null);
+    print("==========图文排版==========");
+    print(json);
+    assert(json != null);
   });
 
   test("自定义颜色属性测试", () {
@@ -74,23 +75,25 @@ void main() {
     }
 
     var json = paragraphNode.toJson(
-      attributionSerializeBuilder: serialize,
+      customAttributionSerializeBuilder: serialize,
     );
     var docNode = DocumentNodeJson.fromJson(
       json!,
-      attributionDeserializeBuilder: deserializeAttr,
+      customAttributionDeserializeBuilder: deserializeAttr,
     );
     var json2 = docNode.toJson(
-      attributionSerializeBuilder: serialize,
+      customAttributionSerializeBuilder: serialize,
     );
+    print("==========自定义颜色属性==========");
+    print(json2);
     expect(json, json2);
   });
 
   test("文档 测试", () {
     var document = createInitialDocument();
-    var json = document.toJson(customSerializeParser: []);
+    var json = document.toJson(customNodeSerializeParser: []);
     assert(json != null);
-    var document2 = DocumentJson.fromJson(json!, customSerializeParser: []);
+    var document2 = DocumentJson.fromJson(json!, customNodeSerializeParser: []);
     var json2 = document2.toJson();
     assert(json2 != null);
     expect(json, json2);
@@ -102,7 +105,7 @@ void main() {
       isComplete: true,
       text: AttributedText(
         text:
-            'Create and configure your document, for example, by creating a new MutableDocument.',
+        'Create and configure your document, for example, by creating a new MutableDocument.',
       ),
     );
     var json = taskNode.toJson();
@@ -110,6 +113,8 @@ void main() {
     var node = DocumentNodeJson.fromJson(json!);
     var json2 = node.toJson();
     assert(json2 != null);
+    print("==========TaskNode==========");
+    print(json2);
     expect(json, json2);
   });
 
@@ -133,6 +138,8 @@ void main() {
     assert(json != null);
     var node = DocumentNodeJson.fromJson(json!);
     var json2 = node.toJson();
+    print("==========ListNode==========");
+    print(json2);
     expect(json, json2);
   });
 
@@ -164,17 +171,21 @@ void main() {
     assert(json != null);
     var node = DocumentNodeJson.fromJson(json!);
     var json2 = node.toJson();
+    print("==========ListNode==========");
+    print(json2);
     expect(json, json2);
   });
 
   test("HorizontalRuleNodeSerializeParser", () {
     var horizontalRuleNode =
-        HorizontalRuleNode(id: DocumentEditor.createNodeId());
+    HorizontalRuleNode(id: DocumentEditor.createNodeId());
     var json = horizontalRuleNode.toJson();
     assert(json != null);
     var node = DocumentNodeJson.fromJson(json!);
     var json2 = node.toJson();
     assert(json2 != null);
+    print("==========HorizontalRuleNode==========");
+    print(json2);
     expect(json, json2);
   });
 
@@ -191,6 +202,8 @@ void main() {
     var json = imageNode.toJson();
     var node = DocumentNodeJson.fromJson(json!);
     var json2 = node.toJson();
+    print("==========ImageNode==========");
+    print(json2);
     expect(json, json2);
   });
 
@@ -222,6 +235,8 @@ void main() {
     var json = paragraphNode.toJson();
     var docNode = DocumentNodeJson.fromJson(json!);
     var json2 = docNode.toJson();
+    print("==========link==========");
+    print(json2);
     expect(json, json2);
   });
 
@@ -270,6 +285,8 @@ void main() {
     var json = paragraphNode.toJson();
     var docNode = DocumentNodeJson.fromJson(json!);
     var json2 = docNode.toJson();
+    print("==========文本各种属性==========");
+    print(json2);
     expect(json, json2);
   });
 
@@ -295,9 +312,9 @@ class _ColorAttribution extends Attribution {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is _ColorAttribution &&
-          runtimeType == other.runtimeType &&
-          color == other.color;
+          other is _ColorAttribution &&
+              runtimeType == other.runtimeType &&
+              color == other.color;
 
   @override
   int get hashCode => color.hashCode;

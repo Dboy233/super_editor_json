@@ -6,7 +6,7 @@ import 'document_json_parser_default.dart';
 
 ///文档序列化 , Document serialization
 ///[customNodeSerializeParser] 自定义序列化处理器
-///[customAttributionSerializeBuilder] 属性序列化构建器 - [Attribution]
+///[customAttributionSerializeBuilder] 自定义属性序列化构建器 - [Attribution]
 List<dynamic> documentSerialize(
   Document document, {
   List<AbsDocumentSerialize> customNodeSerializeParser = const [],
@@ -179,9 +179,15 @@ abstract class BaseDocumentJsonSerialize<T extends DocumentNode> implements AbsD
   }
 
   ///Deserialize the node
+  ///When creating a node, what data the node needs, [serializeNode] needs save what data.
+  ///Review the methods exposed in [BaseDocumentJsonSerialize] to simplify the difficulty of deserializing data.
+  ///创建节点的时候，节点需要什么数据，[serializeNode]就要保存什么数据。
+  ///查看[BaseDocumentJsonSerialize]中公开的方法，以简化对数据反序列化的难度。
   T? deserializeNode(Map<String, dynamic> map);
 
   ///Serialize node data
+  ///Review the methods exposed in [BaseDocumentJsonSerialize] to simplify the difficulty of serializing data.
+  ///查看[BaseDocumentJsonSerialize]中公开的方法，以简化对数据序列化的难度。
   Map<String, dynamic>? serializeNode(T node);
 
   ///Serialize the [AttributedText]
@@ -405,7 +411,7 @@ abstract class BaseDocumentJsonSerialize<T extends DocumentNode> implements AbsD
   }
 
   ///All known NamedAttribution
-  ///已知 SuperEditor 内置所有 [NamedAttribution]
+  ///已知 SuperEditor 所有内置的 [NamedAttribution]
   static const _allNameAttribution = [
     header1Attribution,
     header2Attribution,
