@@ -3,8 +3,9 @@ import 'dart:convert';
 import 'package:example/_example_document.dart';
 import 'package:flutter/material.dart';
 import 'package:super_editor/super_editor.dart';
-import 'package:super_editor_json/ext/document_parser_ext.dart';
 import 'package:super_editor_json/parser/json/document_json_parser.dart';
+
+import '_color_attribution.dart';
 
 void main() {
   runApp(const MyApp());
@@ -35,7 +36,8 @@ class _EditorPageState extends State<EditorPage> {
   @override
   void initState() {
     //Create a document using json.
-    document = DocumentJson.fromJson(jsonDocument, attributionDeserializeBuilder: deserializeAttr);
+    document = createInitialDocument();
+    // document = DocumentJson.fromJson(jsonDocument, attributionDeserializeBuilder: deserializeAttr);
     editor = DocumentEditor(document: document as MutableDocument);
     super.initState();
   }
@@ -43,7 +45,7 @@ class _EditorPageState extends State<EditorPage> {
   ///自定义 ColorAttribution 序列化
   ///Custom ColorAttribution serialization
   Map<String, dynamic>? serializeAttr(attribution) {
-    if (attribution is _ColorAttribution) {
+    if (attribution is ColorAttribution) {
       return {
         "color": attribution.color.value,
       };
@@ -55,7 +57,7 @@ class _EditorPageState extends State<EditorPage> {
   ///Deserialize the custom ColorAttribution
   Attribution? deserializeAttr(Map<String, dynamic> map) {
     if (map["color"] != null) {
-      return _ColorAttribution(Color(map["color"]));
+      return ColorAttribution(Color(map["color"]));
     }
     return null;
   }
@@ -98,14 +100,11 @@ class _EditorPageState extends State<EditorPage> {
         ///查看[_ColorAttribution]的注释
         stylesheet: defaultStylesheet.copyWith(
           inlineTextStyler: (attributions, existingStyle) {
+
             TextStyle newStyle = defaultInlineTextStyler(attributions, existingStyle);
 
             for (final attribution in attributions) {
-              if (attribution is _ColorAttribution) {
-                newStyle = newStyle.copyWith(
-                  color: attribution.color,
-                );
-              }
+              newStyle = newStyle.mergeColorAttribution(attribution);
             }
 
             return newStyle;
@@ -129,49 +128,4 @@ class _EditorPageState extends State<EditorPage> {
       ),
     );
   }
-}
-
-///自定义属性样式
-///如何使用:
-///
-///  var paragraphNode = ParagraphNode(
-//       id: DocumentEditor.createNodeId(),
-//       text: AttributedText(
-//         text: 'Welcome to Super Editor 💙 🚀',
-//         spans: AttributedSpans(
-//           attributions: [
-//             SpanMarker(
-//               attribution: _ColorAttribution(Colors.red),
-//               offset: 0,
-//               markerType: SpanMarkerType.start,
-//             )
-//           ],
-//         ),
-//       ),
-//     );
-///
-class _ColorAttribution extends Attribution {
-  final Color color;
-
-  _ColorAttribution(this.color);
-
-  @override
-  bool canMergeWith(Attribution other) {
-    return this == other;
-  }
-
-  @override
-  String toString() {
-    return '[ColorAttribution]: ${color.value}';
-  }
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) || other is _ColorAttribution && runtimeType == other.runtimeType && color == other.color;
-
-  @override
-  int get hashCode => color.hashCode;
-
-  @override
-  String get id => 'color';
 }

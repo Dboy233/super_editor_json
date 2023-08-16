@@ -1,5 +1,7 @@
-import 'package:flutter/rendering.dart';
+import 'package:flutter/material.dart';
 import 'package:super_editor/super_editor.dart';
+
+import '_color_attribution.dart';
 
 get jsonDocument => r"""
 [
@@ -434,6 +436,18 @@ Document createInitialDocument() {
         id: DocumentEditor.createNodeId(),
         text: AttributedText(
           text: 'Welcome to Super Editor 💙 🚀',
+          spans: AttributedSpans(attributions: [
+            SpanMarker(
+              attribution: ColorAttribution(Colors.red),
+              offset: 0,
+              markerType: SpanMarkerType.start,
+            ),
+            SpanMarker(
+              attribution: ColorAttribution(Colors.red),
+              offset: 6,
+              markerType: SpanMarkerType.end,
+            ),
+          ]),
         ),
         metadata: {
           'blockType': header1Attribution,
@@ -541,8 +555,8 @@ Document createInitialDocument() {
       ParagraphNode(
         id: DocumentEditor.createNodeId(),
         text: AttributedText(
-            text: "加粗文本，斜体文本，删除文本,下划线文本..普通文本",
-            spans: AttributedSpans(attributions: const [
+            text: "加粗文本，斜体文本，删除文本,下划线文本,普通文本,多彩文本",
+            spans: AttributedSpans(attributions:[
               SpanMarker(attribution: boldAttribution, offset: 0, markerType: SpanMarkerType.start),
               SpanMarker(attribution: boldAttribution, offset: 3, markerType: SpanMarkerType.end),
               SpanMarker(attribution: italicsAttribution, offset: 5, markerType: SpanMarkerType.start),
@@ -551,14 +565,18 @@ Document createInitialDocument() {
               SpanMarker(attribution: strikethroughAttribution, offset: 13, markerType: SpanMarkerType.end),
               SpanMarker(attribution: underlineAttribution, offset: 14, markerType: SpanMarkerType.start),
               SpanMarker(attribution: underlineAttribution, offset: 19, markerType: SpanMarkerType.end),
+              SpanMarker(attribution: ColorAttribution(Colors.deepOrangeAccent), offset: 26, markerType: SpanMarkerType.start),
+              SpanMarker(attribution: ColorAttribution(Colors.deepOrangeAccent), offset: 27, markerType: SpanMarkerType.end),
+              SpanMarker(attribution: ColorAttribution(Colors.greenAccent), offset: 28, markerType: SpanMarkerType.start),
+              SpanMarker(attribution: ColorAttribution(Colors.greenAccent), offset: 29, markerType: SpanMarkerType.end),
             ])),
       ),
       ParagraphNode(
         id: DocumentEditor.createNodeId(),
         metadata: {'blockType': blockquoteAttribution},
         text: AttributedText(
-            text: "加粗文本，斜体文本，删除文本,下划线文本.注释块类型",
-            spans: AttributedSpans(attributions: const [
+            text: "加粗文本，斜体文本，删除文本,下划线文本,注释块类型,多彩文本",
+            spans: AttributedSpans(attributions: const  [
               SpanMarker(attribution: boldAttribution, offset: 0, markerType: SpanMarkerType.start),
               SpanMarker(attribution: boldAttribution, offset: 3, markerType: SpanMarkerType.end),
               SpanMarker(attribution: italicsAttribution, offset: 5, markerType: SpanMarkerType.start),
